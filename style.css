@@ -183,6 +183,9 @@ button {
   font-family: "Courier New", monospace;
   font-size: 13px;
   cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 #controls button {
@@ -261,4 +264,71 @@ h1 {
   font-size: 15px;
   line-height: 1.75;
    color: #b9b6ae;
+}
+
+#trim-toggle[hidden],
+#trim-controls[hidden] {
+  display: none;
+}
+
+#trim-timeline {
+  position: relative;
+  width: 75%;
+  height: 44px;
+  margin: 0 auto 24px;
+}
+
+.trim-track {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(28, 30, 29, 0.2);
+}
+
+#trim-selection {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #1C1E1D;
+}
+
+.trim-handle {
+  position: absolute;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  transform: translateX(-50%);
+  touch-action: none;
+}
+
+.trim-handle::after {
+  content: "";
+  display: block;
+  width: 3px;
+  height: 24px;
+  margin: auto;
+  background: #1C1E1D;
+}
+
+#trim-start-handle {
+  left: 0;
+}
+
+#trim-end-handle {
+  left: 100%;
+}
+
+#trim-controls,
+#trim-controls * {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }

@@ -28,8 +28,8 @@
 
     <p class="instructions">
        Enable motion access, then press Begin when you're ready.
-       Move with your phone in hand for eight seconds.
-      Try one continuous gesture, or repeat a small movement.
+       Move with your phone in hand.
+      Try one continuous gesture, or repeat a small movement. (I recommend starting with making loops with your phone speeding up and slowing down to get a feel for how the tool works!)
     </p>
 
   </header>
@@ -37,6 +37,29 @@
   <div id="controls"></div>
 
   <div id="gesture-area"></div>
+
+  <button id="trim-toggle" hidden>Trim</button>
+
+  <div id="trim-controls" hidden>
+    <div id="trim-timeline">
+    <div class="trim-track"></div>
+    <div id="trim-selection"></div>
+
+    <button
+      id="trim-start-handle"
+      class="trim-handle"
+      aria-label="Trim beginning"
+    ></button>
+
+    <button
+      id="trim-end-handle"
+      class="trim-handle"
+      aria-label="Trim ending"
+    ></button>
+
+    </div>
+  </div>
+  
   
   <div id="capture-button-area"></div>
 
@@ -88,7 +111,7 @@
 
     <p>
     Your phone contains tiny sensors that detect changes in motion. Affect uses acceleration data to translate those changes into a three-dimensional sketch.
-    Hold your phone and capture eight seconds of movement. You might let a single gesture unfold, repeat a smaller movement, or respond to a piece of music.
+    Hold your phone and capture a moment of movement. You might let a single gesture unfold, repeat a smaller movement, or respond to a piece of music.
     Once captured, you can turn your sketch, explore it from different perspectives, and watch it unfold again.
     Try repeating a gesture, changing its rhythm or intensity. See what changes, what remains, and what surprises you.
     </p>

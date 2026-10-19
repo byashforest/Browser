@@ -10,6 +10,9 @@ let isRecording = false;
 let isPreparing = false;
 let samples = [];
 let smoothedSamples =[];
+let trimStartTime = null;
+let trimEndTime = null;
+const minTrimDuration = 2000;
 let gesturePalette = [
   [84, 0.025, 245, 0.5],
   [75, 0.050, 250, 0.5],
@@ -64,7 +67,7 @@ let canvas = createCanvas(size, size, WEBGL);
   enableButton.parent("controls")
   enableButton.elt.addEventListener("click", enableMotion);
 
-  startButton = createButton("Begin 8-second recording");
+  startButton = createButton("Begin");
   startButton.parent("capture-button-area");
   startButton.elt.addEventListener("click", startCapture);
 
@@ -87,6 +90,122 @@ let canvas = createCanvas(size, size, WEBGL);
   resetButton.class("reset-view-button");
   resetButton.parent("gesture-area");
   resetButton.elt.addEventListener("click", resetView);
+
+
+  const trimToggle = document.getElementById("trim-toggle");
+  const trimControls = document.getElementById("trim-controls");
+
+  trimToggle.addEventListener("click", () => {
+    const isOpen = !trimControls.hidden;
+
+    trimControls.hidden = isOpen;
+    trimToggle.textContent = isOpen ? "Trim" : "Done";
+  });
+
+  const trimTimeline = document.getElementById("trim-timeline");
+  const trimStartHandle = document.getElementById("trim-start-handle");
+  const trimSelection = document.getElementById("trim-selection");
+
+let dragStartX = null;
+let dragStartTime = null;
+
+trimStartHandle.addEventListener("pointerdown", (event) => {
+  if (trimStartTime === null || trimEndTime === null) return;
+
+  event.preventDefault();
+
+  dragStartX = event.clientX;
+  dragStartTime = trimStartTime;
+
+  trimStartHandle.setPointerCapture(event.pointerId);
+});
+
+trimStartHandle.addEventListener("pointermove", (event) => {
+  if (dragStartX === null) return;
+
+  const recordingStart = samples[0].time;
+  const recordingEnd = samples[samples.length - 1].time;
+  const duration = recordingEnd - recordingStart;
+
+  if (duration <= 0) return;
+
+  const timelineWidth = trimTimeline.getBoundingClientRect().width;
+  const deltaTime = (event.clientX - dragStartX) / timelineWidth * duration;
+
+  trimStartTime = Math.max(
+    recordingStart,
+    Math.min(dragStartTime + deltaTime, trimEndTime - minTrimDuration)
+  );
+
+  const startPercent = (trimStartTime - recordingStart) / duration * 100;
+  const endPercent = (trimEndTime - recordingStart) / duration * 100;
+
+  trimStartHandle.style.left = `${startPercent}%`;
+
+  trimSelection.style.left = `${startPercent}%`;
+  trimSelection.style.width = `${endPercent - startPercent}%`;
+
+  
+});
+
+function finishTrimDrag() {
+  dragStartX = null;
+  dragStartTime = null;
+}
+
+trimStartHandle.addEventListener("pointerup", finishTrimDrag);
+trimStartHandle.addEventListener("pointercancel", finishTrimDrag);
+
+const trimEndHandle = document.getElementById("trim-end-handle");
+
+let endDragStartX = null;
+let endDragStartTime = null;
+
+trimEndHandle.addEventListener("pointerdown", (event) => {
+  if (trimStartTime === null || trimEndTime === null) return;
+
+  event.preventDefault();
+
+  endDragStartX = event.clientX;
+  endDragStartTime = trimEndTime;
+
+  trimEndHandle.setPointerCapture(event.pointerId);
+});
+
+trimEndHandle.addEventListener("pointermove", (event) => {
+  if (endDragStartX === null) return;
+
+  const recordingStart = samples[0].time;
+  const recordingEnd = samples[samples.length - 1].time;
+  const duration = recordingEnd - recordingStart;
+
+  if (duration <= 0) return;
+
+  const timelineWidth = trimTimeline.getBoundingClientRect().width;
+  const deltaTime = (event.clientX - endDragStartX) / timelineWidth * duration;
+
+  trimEndTime = Math.min(
+    recordingEnd,
+    Math.max(endDragStartTime + deltaTime, trimStartTime + minTrimDuration)
+  );
+
+  const startPercent = (trimStartTime - recordingStart) / duration * 100;
+  const endPercent = (trimEndTime - recordingStart) / duration * 100;
+
+  trimEndHandle.style.left = `${endPercent}%`;
+
+  trimSelection.style.width = `${endPercent - startPercent}%`;
+
+  
+});
+
+function finishEndTrimDrag() {
+  endDragStartX = null;
+  endDragStartTime = null;
+}
+
+trimEndHandle.addEventListener("pointerup", finishEndTrimDrag);
+trimEndHandle.addEventListener("pointercancel", finishEndTrimDrag);
 }
 
 function toggleExpandedView() {
@@ -127,6 +246,8 @@ let scaleY = previousBounds.height / newBounds.height;
       easing: "ease-in-out"
     }
   );
+
+
 }
 
 function resetView() {
@@ -193,31 +314,21 @@ function handleMotion(event) {
 }
 
 
+
 function startCapture() {
 
-  if (isPreparing || isRecording) return;
+  if (isRecording) {
+    stopCapture();
+    return;
+  }
+
+  document.getElementById("trim-toggle").hidden = true;
+  document.getElementById("trim-controls").hidden = true;
   document.getElementById("gesture-area").style.display = "none";
 
-  isPreparing = true;
+  beginRecording();
+  }
 
-  let secondsLeft = 5;
-
-  startButton.html(`Get ready · ${secondsLeft}`);
-
-  const countdown = setInterval(() => {
-
-    secondsLeft--;
-
-    if (secondsLeft > 0) {
-      startButton.html(`Get ready · ${secondsLeft}`);
-    } else {
-      clearInterval(countdown);
-      isPreparing = false;
-      beginRecording();
-    }
-
-  }, 1000);
-}
 
 function beginRecording() {
 
@@ -226,32 +337,28 @@ function beginRecording() {
   playbackStartTime = null;
 
   recordingStartTime = performance.now();
-
   isRecording = true;
 
   tableContainer.html("");
 
-  let secondsLeft = 8;
-
-  startButton.html(`Recording · ${secondsLeft}`);
-
-  const countdown = setInterval(() => {
-
-    secondsLeft--;
-
-    if (secondsLeft > 0) {
-      startButton.html(`Recording · ${secondsLeft}`);
-    } else {
-      clearInterval(countdown);
-      stopCapture();
-    }
-
-  }, 1000);
+  startButton.html("Recording · End");
+  statusText.html("Recording");
 }
 
 function stopCapture() {
 
   isRecording = false;
+  if (samples.length > 0) {
+    trimStartTime = samples[0].time;
+    trimEndTime = samples[samples.length - 1].time;
+      
+
+
+  }
+  else {
+    trimStartTime = null;
+    trimEndTime = null;
+  }
   smoothedSamples = gaussianSmooth(samples, 1000);
   gestureRadius = 0;
     for (let sample of smoothedSamples) {
@@ -278,6 +385,14 @@ function stopCapture() {
   //showTable();
   startButton.html("Begin another recording");
   document.getElementById("gesture-area").style.display = "block";
+
+  document.getElementById("trim-toggle").hidden = false;
+  document.getElementById("trim-controls").hidden = true;
+  document.getElementById("trim-toggle").textContent = "Trim";
+  document.getElementById("trim-start-handle").style.left = "0%";
+  document.getElementById("trim-selection").style.left = "0%";
+  document.getElementById("trim-selection").style.width = "100%";
+  document.getElementById("trim-end-handle").style.left = "100%";
 }
 
 
@@ -393,7 +508,7 @@ function draw() {
     maxViewDistance + gestureRadius + 1000
   );
 
- let camX = viewTargetX + viewDistance * cos(viewPitch) * sin(viewYaw);
+  let camX = viewTargetX + viewDistance * cos(viewPitch) * sin(viewYaw);
   let camY = viewTargetY + viewDistance * sin(viewPitch);
   let camZ = viewTargetZ + viewDistance * cos(viewPitch) * cos(viewYaw);
 
@@ -403,13 +518,18 @@ function draw() {
     0, 1, 0
   );
   
-  if (smoothedSamples.length < 2) {
-  return;
+  let visibleSamples = smoothedSamples.filter(sample =>
+  sample.time >= trimStartTime &&
+  sample.time <= trimEndTime
+  );
+
+  if (visibleSamples.length < 2) {
+    return;
   }
 
   noFill();
-  let startTime = smoothedSamples[0].time;
-  let endTime = smoothedSamples[smoothedSamples.length - 1].time;
+  let startTime = visibleSamples[0].time;
+  let endTime = visibleSamples[visibleSamples.length - 1].time;
   let duration = endTime - startTime;
 
   if (duration <= 0 || playbackStartTime === null) {
@@ -427,11 +547,11 @@ function draw() {
   c,
   h,
   1
-]);
+  ]);
 
   beginShape();
 
-  for (let sample of smoothedSamples) {
+  for (let sample of visibleSamples) {
 
     stroke(getGestureColor(sample.time, startTime, endTime));
     vertex(
@@ -449,7 +569,7 @@ function draw() {
 
   beginShape();
 
-  for (let sample of smoothedSamples) {
+  for (let sample of visibleSamples) {
 
     let distance = Math.abs(sample.time - playbackTime);
 
