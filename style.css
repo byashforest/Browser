@@ -228,19 +228,19 @@ h1 {
   margin-left: 4%;
 }
 
-#about-affect {
+#about-under {
   background-color: #192129;
   color: #ddd9d0;
 
   margin-top: -40px;
   padding: 110px 30px 100px;
 }
-#about-affect h1{
+#about-under h1{
   font-family: Areal, Arial, sans-serif;
   text-align: left;
 }
 
-#about-affect h2 {
+#about-under h2 {
   max-width: 500px;
   margin: 50px auto 28px;
 
@@ -251,11 +251,11 @@ h1 {
   color: inherit;
 }
 
-#about-affect h2:first-child {
+#about-under h2:first-child {
   margin-top: 0;
 }
 
-#about-affect p {
+#about-under p {
   max-width: 500px;
   margin: 0 auto 26px;
 
