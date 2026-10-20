@@ -4,6 +4,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+  // Keep Under's page height stable in Firefox on iOS
+  if (/FxiOS/i.test(navigator.userAgent)) {
+
+    let lastWidth = window.innerWidth;
+
+    function setStableHeight() {
+      document.documentElement.style.setProperty(
+        "--under-screen-height",
+        `${window.innerHeight}px`
+      );
+    }
+
+    setStableHeight();
+
+    // Update when the phone rotates, not when the address bar moves
+    window.addEventListener("resize", () => {
+      if (window.innerWidth !== lastWidth) {
+        lastWidth = window.innerWidth;
+        setTimeout(setStableHeight, 350);
+      }
+    });
+  }
+</script>
 
   
 
@@ -17,24 +41,20 @@
 
   <header class="introduction">
 
-     <h1>Under</h1>
-     
-    <p class="eyebrow">a little sketchpad for <i>how</i> you move, not where </p>
+  <h1>under</h1>
 
+  <p class="eyebrow">a sketchbook for movement</p>
 
-    <p class="description">
-      Hold your phone in one hand.
-    </p>
+  <hr class="opening-rule">
 
-    <p class="instructions">
-       Enable motion access, then press Begin when you're ready.
-       Move with your phone in hand.
-      Try one continuous gesture, or repeat a small movement. (I recommend starting with making loops with your phone speeding up and slowing down to get a feel for how the tool works!)
-    </p>
+  <p class="description">
+  Make a mark with your movement.
+</p>
 
-  </header>
+</header>
 
   <div id="controls"></div>
+  <p id="motion-message" role="status" hidden></p>
 
   <div id="gesture-area"></div>
 
@@ -61,7 +81,17 @@
   </div>
   
   
-  <div id="capture-button-area"></div>
+<div id="capture-button-area">
+</div>
+
+ <details id="movement-ideas" hidden>
+    <summary>need a place to start?</summary>
+    <p>
+      try making a few loops with your phone.
+      speed up, then slow down.
+    </p>
+  </details>
+</div>
 
   <div id="recording-status-area"></div>
 

@@ -63,15 +63,16 @@ let canvas = createCanvas(size, size, WEBGL);
   canvas.elt.addEventListener("pointerup", stopOrbit);
   canvas.elt.addEventListener("pointercancel", stopOrbit);
 
-  const enableButton = createButton("Enable motion permission");
-  enableButton.parent("controls")
+  const enableButton = createButton("Enable motion");
+  enableButton.parent("capture-button-area");
   enableButton.elt.addEventListener("click", enableMotion);
 
   startButton = createButton("Begin");
   startButton.parent("capture-button-area");
+  startButton.hide();
   startButton.elt.addEventListener("click", startCapture);
 
-  statusText = createP("Not recording");
+  statusText = createP("");
   statusText.parent("recording-status-area");
   
 
@@ -260,29 +261,52 @@ function resetView() {
   viewTargetZ = 0;
 }
 
-async function enableMotion() {
-  statusText.html("Enable Motion function triggered");
-  // iPhone / iPad Safari
-  if (
-    typeof DeviceMotionEvent !== "undefined" &&
-    typeof DeviceMotionEvent.requestPermission === "function"
-  ) {
+async function enableMotion(event) {
 
-    const permission = await DeviceMotionEvent.requestPermission();
-    statusText.html(`Motion permission: ${permission}`);
+  const button = event.currentTarget;
+  const message = document.getElementById("motion-message");
 
-    if (permission === "granted") {
-      window.addEventListener("devicemotion", handleMotion);
+  message.hidden = true;
+
+  if (typeof DeviceMotionEvent === "undefined") {
+    message.textContent =
+      "Motion sensing isn't available on this device or browser.";
+    message.hidden = false;
+    button.disabled = true;
+    return;
+  }
+
+  try {
+
+    if (typeof DeviceMotionEvent.requestPermission === "function") {
+
+      const permission = await DeviceMotionEvent.requestPermission();
+
+      if (permission !== "granted") {
+        message.textContent =
+       "Uh oh! Under can't sense your movement just yet. Close and reopen your browser, then come back and try again. Still no luck? Check your browser's site permissions.";
+
+        message.hidden = false;
+        return;
+      }
     }
 
-  }
-
-  // Android and other browsers
-  else {
     window.addEventListener("devicemotion", handleMotion);
+
+    button.remove();
+    startButton.show();
+    document.getElementById("movement-ideas").hidden = false;
+
+  } catch (error) {
+
+    console.error("Motion permission error:", error);
+
+    message.textContent =
+      "Oops! Something went wrong while turning on motion sensing. Try again, or close and reopen your browser if it keeps happening.";
+
+    message.hidden = false;
   }
 }
-
 
 function handleMotion(event) {
   
@@ -500,7 +524,7 @@ function getGestureColor(time, startTime, endTime, palette = gesturePalette) {
 }
 
 function draw() {
-  background(12, 0.015, 260);
+  background("#0f0f0e");
   perspective(
     PI / 3,
     width / height,

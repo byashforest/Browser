@@ -21,8 +21,6 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
-
   background-color: #CEC8BC;
   background-size: cover;
   background-position: center top;
@@ -38,9 +36,13 @@ body {
   background-size: 155% auto;
   background-position: -35px top;
   background-repeat: no-repeat;
-
-  padding-bottom: 0px;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(var(--under-screen-height, 100svh) * 0.10);
+  min-height: var(--under-screen-height, 100svh);
+  box-sizing: border-box;
 }
+
 /* Introduction */
 
 .introduction {
@@ -59,7 +61,6 @@ body {
   font-family: "Courier New", monospace;
   font-size: 12px;
   letter-spacing: .5;
-  transform: translateY(-1vw);
   margin: 0 0 14px;
 }
 
@@ -76,7 +77,6 @@ h1 {
   font-variation-settings: "MONO" 75;
   font-size: 15px;
   line-height: var(--paper-line-spacing);
-  transform: translateY(9vw);
   max-width: 290px;
   margin: 0 0 24px;
 }
@@ -88,7 +88,6 @@ h1 {
   opacity: .7;
   text-align: center;
   line-height: var(--paper-line-spacing);
-  transform: translateY(4vw);
   max-width: 290px;
   margin: 0;
 }
@@ -101,8 +100,7 @@ h1 {
   aspect-ratio: 1;
   margin: 0 auto 24px;
   display: none;
-  background: #111a2400;
-  border: 1px solid #1e333b;
+  border: 1px solid #192129;
   animation: gesture-reveal 700ms ease-out;
   
 }
@@ -231,9 +229,7 @@ h1 {
 #about-under {
   background-color: #192129;
   color: #ddd9d0;
-
-  margin-top: -40px;
-  padding: 110px 30px 100px;
+  padding: 30px 30px 100px;
 }
 #about-under h1{
   font-family: Areal, Arial, sans-serif;
@@ -331,4 +327,201 @@ h1 {
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
+}
+
+
+/* Dark paper experiment */
+
+body {
+  background: #171715;
+  color: #e8e3d8;
+}
+
+#paper-page {
+  background: #0f0f0e;
+}
+
+.introduction {
+  background: none;
+}
+
+/* Opening composition */
+
+.introduction {
+  text-align: left;
+  padding: 48px 7% 30px;
+}
+
+.introduction h1,
+.introduction .eyebrow,
+.introduction .description {
+  margin-left: 0;
+  transform: none;
+}
+
+.description {
+  line-height: 1.4;
+}
+
+.introduction h1 {
+  margin-bottom: 6px;
+}
+
+.introduction .eyebrow {
+  margin-bottom: 0;
+}
+
+.introduction .description {
+  margin-top: clamp(80px, 16svh, 140px);
+  font-family: Areal, Arial, sans-serif;
+  font-variation-settings: "MONO" 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #c6c0b5;
+}
+
+#about-under {
+  background-color: #0f0f0e;
+  margin-top: 0;
+}
+
+
+#controls button {
+  background: transparent;
+  border: none;
+  color: #b8b3aa;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+#recording-status-area {
+  display: none;
+}
+
+#motion-message {
+  max-width: 280px;
+  margin: 0 auto 24px;
+  color: #b8b3aa;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+#motion-message[hidden] {
+  display: none;
+}
+
+#paper-page {
+  display: flex;
+  flex-direction: column;
+}
+
+#controls {
+  margin-top: auto;
+}
+
+#capture-button-area {
+  padding-bottom: 20px;
+}
+
+#capture-button-area button {
+  width: fit-content;
+  min-width: 170px;
+  max-width: 85%;
+  min-height: 54px;
+  padding: 12px 28px;
+
+  background: transparent;
+  color: #e8e3d8;
+  border: 1px solid #a49e93;
+  border-radius: 0;
+
+  font-family: Areal, Arial, sans-serif;
+  font-size: 16px;
+  font-variation-settings: "MONO" 50;
+}
+
+#capture-button-area button:active {
+  background: #292925;
+}
+
+
+#movement-ideas {
+  position: relative;
+  width: 85%;
+  max-width: 280px;
+  margin: 0 auto 12px;
+  text-align: center;
+  color: #aaa59b;
+}
+
+#movement-ideas summary {
+  display: grid;
+  place-items: center;
+  min-height: 44px;
+  list-style: none;
+  cursor: pointer;
+
+  font-family: Areal, Arial, sans-serif;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+#movement-ideas summary::-webkit-details-marker {
+  display: none;
+}
+
+#movement-ideas p {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 8px 0 0;
+  padding: 8px;
+
+  background: #0f0f0e;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+#capture-button-area {
+  padding-bottom: 0;
+}
+
+#capture-button-area button {
+  margin-bottom: 8px;
+}
+
+.opening-rule {
+  border: none;
+  border-top: 1px solid #3b3934;
+  width: calc(100% + 14vw);
+  margin: 24px 0 0 -7vw;
+}
+
+.introduction h1 {
+  color: #b0a799;
+}
+
+.introduction .eyebrow {
+  color: #898277;
+}
+
+.opening-rule {
+  border-top-color: #302d28;
+}
+
+.introduction h1 {
+  font-family: Georgia, serif;
+  font-size: 42px;
+  font-weight: normal;
+  letter-spacing: -0.03em;
+}
+
+.introduction .eyebrow {
+  font-family: Areal, Arial, sans-serif;
+  font-variation-settings: "MONO" 0;
+  font-size: 13px;
+  letter-spacing: 0;
 }
