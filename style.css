@@ -377,7 +377,7 @@ body {
   font-variation-settings: "MONO" 0;
   font-size: 16px;
   line-height: 1.5;
-  color: #c6c0b5;
+  color: #b0a799;
 }
 
 #about-under {
@@ -524,4 +524,86 @@ body {
   font-variation-settings: "MONO" 0;
   font-size: 13px;
   letter-spacing: 0;
+}
+
+/* About — typography */
+
+#about-under {
+  padding: 72px 8% 100px;
+}
+
+#about-under h2 {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: normal;
+  letter-spacing: -0.02em;
+  margin-bottom: 36px;
+}
+
+#about-under p {
+  font-family: Georgia, serif;
+  font-size: 17px;
+  line-height: 1.8;
+  color: #d0c9bd;
+  max-width: 480px;
+  margin-bottom: 24px;
+}
+
+#about-under .about-signature {
+  font-style: italic;
+  margin-top: 36px;
+}
+
+/* Acknowledgments */
+
+.about-credits {
+  max-width: 480px;
+  margin: 72px auto 0;
+  padding-top: 28px;
+  border-top: 1px solid #302d28;
+}
+
+#about-under .about-credits h2 {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+#about-under .about-credits p {
+  font-family: Areal, Arial, sans-serif;
+  font-variation-settings: "MONO" 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #aaa59b;
+}
+
+#about-disclosure {
+  background: #0f0f0e;
+  padding: 24px 8% 48px;
+}
+
+#about-disclosure summary {
+  width: fit-content;
+  cursor: pointer;
+  list-style: none;
+
+  font-family: Georgia, serif;
+  font-size: 14px;
+  font-style: italic;
+  color: #898277;
+}
+
+#about-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+#about-disclosure summary::after {
+  content: " +";
+}
+
+#about-disclosure[open] summary::after {
+  content: " −";
+}
+
+#about-disclosure #about-under {
+  padding: 40px 0 60px;
 }

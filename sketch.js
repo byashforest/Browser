@@ -63,11 +63,11 @@ let canvas = createCanvas(size, size, WEBGL);
   canvas.elt.addEventListener("pointerup", stopOrbit);
   canvas.elt.addEventListener("pointercancel", stopOrbit);
 
-  const enableButton = createButton("Enable motion");
+  const enableButton = createButton("Wake me up");
   enableButton.parent("capture-button-area");
   enableButton.elt.addEventListener("click", enableMotion);
 
-  startButton = createButton("Begin");
+  startButton = createButton("Go on, then");
   startButton.parent("capture-button-area");
   startButton.hide();
   startButton.elt.addEventListener("click", startCapture);
