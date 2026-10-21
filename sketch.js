@@ -407,7 +407,7 @@ function stopCapture() {
   //console.table(samples);
 
   //showTable();
-  startButton.html("Begin another recording");
+  startButton.html("give me another");
   document.getElementById("gesture-area").style.display = "block";
 
   document.getElementById("trim-toggle").hidden = false;
