@@ -607,3 +607,9 @@ body {
 #about-disclosure #about-under {
   padding: 40px 0 60px;
 }
+
+h1 img {
+  display: block;
+  width: 120px;
+  height: auto;
+}
